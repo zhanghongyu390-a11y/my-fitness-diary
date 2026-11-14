@@ -593,7 +593,7 @@ function saveGoalSettings(){
  const status=$('goalSettingsStatus');if(status)status.textContent=t?\`已保存并计算：每日能量约 \${t.calories} kcal，蛋白质约 \${t.proteinTarget} g。\`:'其他目标已保存。请补充年龄、生理性别和日常活动水平后，系统才能计算个体化营养目标。';
 }
 
-function renderDailyMotivation(){function renderDailyMotivation(){
+function renderDailyMotivation(){
  const date=today(),d=new Date(date+'T12:00:00'),dayNumber=Math.floor(d.getTime()/86400000),idx=((dayNumber%motivationPhotos.length)+motivationPhotos.length)%motivationPhotos.length;
  const photo=$('dailyMotivationImage');if(photo){photo.src=motivationPhotos[idx];photo.alt='每日激励照片';photo.onerror=()=>{photo.style.display='none'}}
  const msg=$('motivationMessage');if(msg)msg.textContent=motivationLines[idx];
@@ -681,4 +681,4 @@ if(RecipeSpeech){
 
 $('recipeApiUrl').value=recipeApiUrl();
 
-</script></body></html>
+</script><script src="nutrition.js"></script></body></html>
