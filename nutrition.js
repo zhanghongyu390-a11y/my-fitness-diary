@@ -94,7 +94,9 @@
     if (!foods.some(food => food.name === '沙拉酱')) {
       foods.push({name:'沙拉酱',k:450,p:1,unit:15,aliases:['沙拉酱','蛋黄酱','美乃滋','mayonnaise'],c:7,fat:45,fiber:0,satFat:7,sugar:5,freeSugar:null,sodium:650,cholesterol:40});
     }
+  }
 
+  function totalsFor(list) {
     const result = {};
     ['k'].concat(nutrientKeys).forEach(key => {
       let value = 0, known = 0;
@@ -561,4 +563,43 @@
   document.head.append(style);
 
   if (typeof render==='function') render();
+  // Defensive repair: normalize records created by older versions before using them.
+  if (typeof day === 'function' && !window.__ftpDayNormalized) {
+    const originalDay = day;
+    day = function(date) {
+      const record = originalDay(date);
+      if (!Array.isArray(record.foods)) record.foods = [];
+      if (!record.health || typeof record.health !== 'object' || Array.isArray(record.health)) record.health = {};
+      return record;
+    };
+    window.__ftpDayNormalized = true;
+  }
+
+  // Rebuild the food category and food selectors after the extension has loaded.
+  if (typeof initFoodPicker === 'function') {
+    try { initFoodPicker(); }
+    catch (error) { console.error('FIT TO PASS food picker initialization failed:', error); }
+  }
+
+  // Use delegated clicks so water buttons keep working after tab switches or re-renders.
+  if (!window.__ftpWaterDelegation) {
+    document.addEventListener('click', function(event) {
+      const button = event.target && event.target.closest ? event.target.closest('[data-water-add]') : null;
+      if (!button) return;
+      const amount = Number(button.getAttribute('data-water-add'));
+      if (!Number.isFinite(amount) || amount <= 0 || amount > 2000) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const record = day(selected());
+      if (!record.health || typeof record.health !== 'object') record.health = {};
+      record.health.waterMl = Math.max(0, Number(record.health.waterMl) || 0) + amount;
+      if (!Array.isArray(record.health.waterLog)) record.health.waterLog = [];
+      record.health.waterLog.push({ml: amount, time: new Date().toISOString()});
+      persist();
+      if (typeof renderWater === 'function') renderWater();
+      if (typeof renderLifestyle === 'function') renderLifestyle();
+    }, true);
+    window.__ftpWaterDelegation = true;
+  }
+
 })();
