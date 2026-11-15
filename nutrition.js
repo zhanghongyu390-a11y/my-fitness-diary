@@ -94,9 +94,7 @@
     if (!foods.some(food => food.name === '沙拉酱')) {
       foods.push({name:'沙拉酱',k:450,p:1,unit:15,aliases:['沙拉酱','蛋黄酱','美乃滋','mayonnaise'],c:7,fat:45,fiber:0,satFat:7,sugar:5,freeSugar:null,sodium:650,cholesterol:40});
     }
-  }
 
-  function totalsFor(list) {
     const result = {};
     ['k'].concat(nutrientKeys).forEach(key => {
       let value = 0, known = 0;
