@@ -420,7 +420,7 @@ function render(){
  $('proteinMeasure').textContent=targets?num(p)+' / '+targets.proteinTarget+' g':num(p)+' g · 待计算目标';
  $('proteinBar').style.width=targets?Math.min(100,p/targets.proteinTarget*100)+'%':'0%';
  $('deficitK').textContent=targets?(burn.total-Math.round(k))+' kcal':'待计算';
- $('burnDetail').textContent=targets?\`静息代谢估算 \${targets.ree} × 活动系数 \${targets.activityFactor} ≈ 全天消耗 \${targets.tdee} kcal；不再把运动记录重复加到活动系数中。\`:'请先在“目标设置”填写年龄、生理性别和日常活动水平，再计算个人能量消耗。';
+ $('burnDetail').textContent=targets?`静息代谢估算 ${targets.ree} × 活动系数 ${targets.activityFactor} ≈ 全天消耗 ${targets.tdee} kcal；不再把运动记录重复加到活动系数中。`:'请先在“目标设置”填写年龄、生理性别和日常活动水平，再计算个人能量消耗。';
  $('totalK').textContent=Math.round(k)+' kcal';
  $('remainK').textContent=targets?Math.max(0,Math.round(targets.calories-k)).toLocaleString('en-US'):'待计算';
  $('totalP').textContent=num(p)+' g';
@@ -546,13 +546,13 @@ function refreshCalculatedGoals(){
 function nutritionTargetTiles(t){
  if(!t)return '<div class="nutrition-empty">请先在“目标设置”中填写年龄、生理性别和日常活动水平。资料不完整时，FIT TO PASS 不会把旧版固定热量或蛋白质数字当作你的个体化目标。</div>';
  const tiles=[
-  ['能量',t.calories,'kcal',\`估算消耗 \${t.tdee} kcal/日\`],
-  ['蛋白质',t.proteinTarget,'g',\`减脂参考范围 \${t.proteinMin}–\${t.proteinMax} g\`],
-  ['碳水化合物',t.carbs,'g',\`EFSA参考范围 \${t.carbMin}–\${t.carbMax} g\`],
-  ['脂肪',t.fat,'g',\`EFSA参考范围 \${t.fatMin}–\${t.fatMax} g\`],
+  ['能量',t.calories,'kcal',`估算消耗 ${t.tdee} kcal/日`],
+  ['蛋白质',t.proteinTarget,'g',`减脂参考范围 ${t.proteinMin}–${t.proteinMax} g`],
+  ['碳水化合物',t.carbs,'g',`EFSA参考范围 ${t.carbMin}–${t.carbMax} g`],
+  ['脂肪',t.fat,'g',`EFSA参考范围 ${t.fatMin}–${t.fatMax} g`],
   ['膳食纤维',t.fiber,'g','成人每日最低参考量']
  ];
- return '<div class="nutrition-target-grid">'+tiles.map(x=>\`<div class="nutrition-target-tile"><span>\${x[0]}</span><b>\${x[1]} <small>\${x[2]}</small></b><em>\${x[3]}</em></div>\`).join('')+'</div>';
+ return '<div class="nutrition-target-grid">'+tiles.map(x=>`<div class="nutrition-target-tile"><span>${x[0]}</span><b>${x[1]} <small>${x[2]}</small></b><em>${x[3]}</em></div>`).join('')+'</div>';
 }
 function renderNutritionTargetSummary(){
  const t=refreshCalculatedGoals(),html=nutritionTargetTiles(t);
@@ -560,7 +560,7 @@ function renderNutritionTargetSummary(){
  const settings=$('nutritionTargetsSummary');
  if(settings){
   if(!t)settings.innerHTML=html;
-  else settings.innerHTML=html+\`<div class="nutrition-method"><b>本次计算依据</b><p>计算体重：\${t.weight} kg（\${t.weightSource}）；静息能量消耗估算：\${t.ree} kcal/日；活动系数：\${t.activityFactor}；估算全天消耗：\${t.tdee} kcal/日；采用\${t.deficit}%能量缺口，得到每日能量目标 \${t.calories} kcal。</p><p>蛋白质目标按 \${t.weight} kg × 1.3 g/kg 估算；EFSA成人基础参考摄入量约为 \${t.proteinRda} g/日（0.83 g/kg），减脂期参考范围为 \${t.proteinMin}–\${t.proteinMax} g/日（1.2–1.6 g/kg）。碳水和脂肪按总能量比例分配，显示目标值及EFSA参考范围。</p><p>其他参考上限：饱和脂肪低于约 \${t.satFatMax} g/日；游离糖低于约 \${t.freeSugarMax} g/日；钠低于 \${t.sodiumMax.toLocaleString('en-US')} mg/日。纤维参考量至少 \${t.fiber} g/日。</p>\${t.belowBmr?'<p class="nutrition-warning">计算出的能量目标低于静息能量消耗估算值。静息能量消耗不是通用的最低摄入线，但这提示模型估算需要谨慎；建议由注册营养师复核，不要仅凭此数字自行大幅限制饮食。</p>':''}\${t.macroRangeWarning?'<p class="nutrition-warning">当前蛋白质比例使碳水/脂肪分配超出常见参考区间，建议由营养专业人员复核。</p>':''}<p class="nutrition-source-list"><b>依据与来源：</b><a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener">Mifflin–St Jeor能量估算公式（1990）</a> · <a href="https://www.efsa.europa.eu/en/press/news/120209" target="_blank" rel="noopener">EFSA蛋白质PRI：0.83 g/kg/日</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/25926512/" target="_blank" rel="noopener">减脂期蛋白质1.2–1.6 g/kg综述</a> · <a href="https://www.efsa.europa.eu/sites/default/files/2022-04/7259.pdf" target="_blank" rel="noopener">EFSA碳水与脂肪参考范围</a> · <a href="https://www.efsa.europa.eu/sites/default/files/2017_09_DRVs_summary_report.pdf" target="_blank" rel="noopener">EFSA膳食纤维参考值</a> · <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet?swcfpc=1" target="_blank" rel="noopener">WHO游离糖与饱和脂肪建议</a> · <a href="https://www.who.int/news-room/fact-sheets/detail/sodium-reduction" target="_blank" rel="noopener">WHO钠摄入建议</a></p><p class="note">这些是健康成人的估算与膳食参考值，不是体检诊断标准，也不是实验室测得的代谢率。活动系数、食物估算和个体代谢差异都会带来误差；后续应结合2–4周体重趋势和实际状态调整。</p></div>\`;
+  else settings.innerHTML=html+`<div class="nutrition-method"><b>本次计算依据</b><p>计算体重：${t.weight} kg（${t.weightSource}）；静息能量消耗估算：${t.ree} kcal/日；活动系数：${t.activityFactor}；估算全天消耗：${t.tdee} kcal/日；采用${t.deficit}%能量缺口，得到每日能量目标 ${t.calories} kcal。</p><p>蛋白质目标按 ${t.weight} kg × 1.3 g/kg 估算；EFSA成人基础参考摄入量约为 ${t.proteinRda} g/日（0.83 g/kg），减脂期参考范围为 ${t.proteinMin}–${t.proteinMax} g/日（1.2–1.6 g/kg）。碳水和脂肪按总能量比例分配，显示目标值及EFSA参考范围。</p><p>其他参考上限：饱和脂肪低于约 ${t.satFatMax} g/日；游离糖低于约 ${t.freeSugarMax} g/日；钠低于 ${t.sodiumMax.toLocaleString('en-US')} mg/日。纤维参考量至少 ${t.fiber} g/日。</p>${t.belowBmr?'<p class="nutrition-warning">计算出的能量目标低于静息能量消耗估算值。静息能量消耗不是通用的最低摄入线，但这提示模型估算需要谨慎；建议由注册营养师复核，不要仅凭此数字自行大幅限制饮食。</p>':''}${t.macroRangeWarning?'<p class="nutrition-warning">当前蛋白质比例使碳水/脂肪分配超出常见参考区间，建议由营养专业人员复核。</p>':''}<p class="nutrition-source-list"><b>依据与来源：</b><a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener">Mifflin–St Jeor能量估算公式（1990）</a> · <a href="https://www.efsa.europa.eu/en/press/news/120209" target="_blank" rel="noopener">EFSA蛋白质PRI：0.83 g/kg/日</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/25926512/" target="_blank" rel="noopener">减脂期蛋白质1.2–1.6 g/kg综述</a> · <a href="https://www.efsa.europa.eu/sites/default/files/2022-04/7259.pdf" target="_blank" rel="noopener">EFSA碳水与脂肪参考范围</a> · <a href="https://www.efsa.europa.eu/sites/default/files/2017_09_DRVs_summary_report.pdf" target="_blank" rel="noopener">EFSA膳食纤维参考值</a> · <a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet?swcfpc=1" target="_blank" rel="noopener">WHO游离糖与饱和脂肪建议</a> · <a href="https://www.who.int/news-room/fact-sheets/detail/sodium-reduction" target="_blank" rel="noopener">WHO钠摄入建议</a></p><p class="note">这些是健康成人的估算与膳食参考值，不是体检诊断标准，也不是实验室测得的代谢率。活动系数、食物估算和个体代谢差异都会带来误差；后续应结合2–4周体重趋势和实际状态调整。</p></div>`;
  }
  const set=(id,value)=>{const el=$(id);if(el)el.textContent=value};
  set('brandCalorieGoal',t?t.calories.toLocaleString('en-US'):'待计算');
@@ -573,10 +573,10 @@ const motivationLines=['今天的坚持，会成为明天的底气。','不用�
 
 function syncGoalSettingsUI(){
  const t=refreshCalculatedGoals();
- const fields={goalAge:goals.ageYears??'',goalSex:goals.sexForEquation||'',goalActivity:goals.activityLevel||'',goalDeficit:String(goals.deficitPercent??10),goalHeightCm:goals.heightCm,goalStartWeight:goals.startWeightKg,goalTargetWeight:goals.targetWeightKg,goalCalories:t?t.calories:'',goalProtein:t?t.proteinTarget:'',goalCarbs:t?t.carbs:'',goalFat:t?t.fat:'',goalFiber:'≥ 25',goalSatFat:t?'< '+t.satFatMax:'',goalFreeSugar:t?'< '+t.freeSugarMax:'',goalSodium:'< 2,000',goalWater:goals.waterTargetMl,goalSteps:goals.stepsTarget,goalExercise:goals.exerciseTargetMin,goalSleep:goals.sleepTargetHours,goalCurrentWeightDisplay:t?\`\${t.weight} kg（\${t.weightSource}）\`:'完善资料后自动读取'};
+ const fields={goalAge:goals.ageYears??'',goalSex:goals.sexForEquation||'',goalActivity:goals.activityLevel||'',goalDeficit:String(goals.deficitPercent??10),goalHeightCm:goals.heightCm,goalStartWeight:goals.startWeightKg,goalTargetWeight:goals.targetWeightKg,goalCalories:t?t.calories:'',goalProtein:t?t.proteinTarget:'',goalCarbs:t?t.carbs:'',goalFat:t?t.fat:'',goalFiber:'≥ 25',goalSatFat:t?'< '+t.satFatMax:'',goalFreeSugar:t?'< '+t.freeSugarMax:'',goalSodium:'< 2,000',goalWater:goals.waterTargetMl,goalSteps:goals.stepsTarget,goalExercise:goals.exerciseTargetMin,goalSleep:goals.sleepTargetHours,goalCurrentWeightDisplay:t?`${t.weight} kg（${t.weightSource}）`:'完善资料后自动读取'};
  for(const [id,value] of Object.entries(fields)){const el=$(id);if(el)el.value=value}
  const status=$('goalSettingsStatus');
- if(status)status.textContent=t?\`已根据个人资料计算：每日约 \${t.calories} kcal；蛋白质 \${t.proteinTarget} g（参考范围 \${t.proteinMin}–\${t.proteinMax} g）。\`:'请补充年龄、生理性别和日常活动水平。旧版固定的1,450 kcal和100 g蛋白质不再作为个体化建议。';
+ if(status)status.textContent=t?`已根据个人资料计算：每日约 ${t.calories} kcal；蛋白质 ${t.proteinTarget} g（参考范围 ${t.proteinMin}–${t.proteinMax} g）。`:'请补充年龄、生理性别和日常活动水平。旧版固定的1,450 kcal和100 g蛋白质不再作为个体化建议。';
  renderNutritionTargetSummary();
  const date=$('brandDate');if(date)date.textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 }
@@ -590,7 +590,7 @@ function saveGoalSettings(){
  if(next.sexForEquation&&!['female','male'].includes(next.sexForEquation))return alert('请重新选择生理性别。');
  if(next.activityLevel&&!Object.prototype.hasOwnProperty.call(ACTIVITY_FACTORS,next.activityLevel))return alert('请重新选择日常活动水平。');
  goals=next;const t=refreshCalculatedGoals();localStorage.setItem(GOAL_KEY,JSON.stringify(goals));syncGoalSettingsUI();render();renderHealth();
- const status=$('goalSettingsStatus');if(status)status.textContent=t?\`已保存并计算：每日能量约 \${t.calories} kcal，蛋白质约 \${t.proteinTarget} g。\`:'其他目标已保存。请补充年龄、生理性别和日常活动水平后，系统才能计算个体化营养目标。';
+ const status=$('goalSettingsStatus');if(status)status.textContent=t?`已保存并计算：每日能量约 ${t.calories} kcal，蛋白质约 ${t.proteinTarget} g。`:'其他目标已保存。请补充年龄、生理性别和日常活动水平后，系统才能计算个体化营养目标。';
 }
 
 function renderDailyMotivation(){
